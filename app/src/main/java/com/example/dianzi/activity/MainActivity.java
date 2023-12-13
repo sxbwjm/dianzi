@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         else if (id ==  R.id.action_export) {
-            MainApplication.instance.exportToExcel();
+
         }
         else if(id == R.id.action_bankflow_principle) {
             Intent intent = new Intent(this, BankflowPrincipleActivity.class);

@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.dianzi"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -53,7 +53,7 @@ dependencies {
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
 
-    implementation("org.apache.poi:poi:3.16")
-
+    implementation("org.apache.poi:poi:5.2.5")
+    implementation("org.apache.poi:poi-ooxml:5.2.5")
 
 }

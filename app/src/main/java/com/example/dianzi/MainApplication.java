@@ -6,8 +6,6 @@ import android.content.Context;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.ajts.androidmads.library.ExcelToSQLite;
-import com.ajts.androidmads.library.SQLiteToExcel;
 import com.example.dianzi.common.Config;
 import com.example.dianzi.db.AppDatabase;
 
@@ -49,48 +47,4 @@ public class MainApplication extends Application {
         return db;
     }
 
-    public void exportToExcel() {
-        System.out.println("export entered");
-        String path = getDataDir().getPath();
-        SQLiteToExcel sqLiteToExcel = new SQLiteToExcel(this, Config.DB_NAME, path);
-        sqLiteToExcel.exportAllTables("tables.xls", new SQLiteToExcel.ExportListener() {
-
-            @Override
-            public void onStart() {
-                System.out.println("export start:" );
-            }
-
-            @Override
-            public void onCompleted(String filePath) {
-                System.out.println("export done:" + filePath);
-            }
-
-            @Override
-            public void onError(Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    public void importFromExcel(String path) {
-        System.out.println("export entered");
-
-        ExcelToSQLite excelToSQLite = new ExcelToSQLite(this, Config.DB_NAME, true);
-        excelToSQLite.importFromFile( getDataDir().getPath() + "/tables.xls", new ExcelToSQLite.ImportListener() {
-            @Override
-            public void onStart() {
-                System.out.println("import start:" );
-            }
-
-            @Override
-            public void onCompleted(String filePath) {
-                System.out.println("import done:" + filePath);
-            }
-
-            @Override
-            public void onError(Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
 }
