@@ -1,0 +1,92 @@
+<resources>
+    <string name="app_name">垫资</string>
+    <string name="action_settings">设置</string>
+    <string name="action_import">导入</string>
+    <string name="action_export">导出</string>
+    <string name="action_bankflow_principle">本金管理</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="top_fragment_label">Top</string>
+    <string name="new_fragment_label">新建</string>
+    <string name="New">新建</string>
+    <string name="Result">结果</string>
+    <string name="Search">查询</string>
+
+    <string name="total_transaction_number">车数</string>
+    <string name="total_days">天数</string>
+    <string name="total_profit">总利润</string>
+    <string name="daily_profit">日平均</string>
+    <string name="total_unreceived">未收款</string>
+    <string name="principle">本 金</string>
+    <string name="cash_available">剩余资金</string>
+
+
+    <string name="sender_name">送货人</string>
+    <string name="No">编号</string>
+    <string name="plate">车号</string>
+    <string name="date">日期</string>
+    <string name="account_name">账号</string>
+
+    <string name="weight">重量</string>
+    <string name="price">单价</string>
+    <string name="total_sales">总价</string>
+    <string name="amount">金额</string>
+    <string name="note">备注</string>
+
+    <string name="fee">手续费</string>
+    <string name="pay_amount">支付额</string>
+    <string name="pay_date">支付日</string>
+    <string name="receive_date">到账日</string>
+
+    <string name="bottom_nav_top">总结</string>
+    <string name="bottom_nav_transaction">送货</string>
+    <string name="bottom_nav_payment">支付</string>
+    <string name="bottom_nav_receivable">应收款</string>
+    <string name="bottom_nav_bankflow_receive">已到账</string>
+
+
+    <string name="payableBatch">应支付</string>
+    <string name="settle">结算</string>
+
+    <string name="save">保存</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+
+    <string name="match">对账</string>
+    <string name="open_photo">图片</string>
+    <string name="process_photo">处理图片</string>
+
+    <string name="add_result">结果</string>
+    <string name="cashflow_payable_type_transaction">送货</string>
+    <string name="cashflow_payable_type_adjust">调整</string>
+    <string name="cashflow_payable_type_interest">利息</string>
+    <string name="bankflow_pay_type_prepayment">预付</string>
+    <string name="bankflow_pay_type_settlement">结算</string>
+    <string name="bankflow_receive_type_bank_statement">到账</string>
+
+    <string name="match_result">对账结果</string>
+
+    <string name="dialog_confirm_title">请确认</string>
+    <string name="dialog_confirm_button">确认</string>
+    <string name="dialog_cancel_button">取消</string>
+    <string name="dialog_confirm_create_payment">确认支付吗？</string>
+
+    <string name="dialog_confirm_delete_transaction">确认删除吗？</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main_settings">MainSettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="import_export">数据管理</string>
+    <string name="title_activity_principle_bankflow">PrincipleBankflowActivity</string>
+    <string name="principle_list">本金管理</string>
+    <string name="principle_new">新建本金</string>
+    <!-- Strings used for fragments for navigation -->
+
+
+    <string name="title_activity_image_process">ImageProcessActivity</string>
+    <string name="title_activity_bankflow_principle">BankflowPrincipleActivity</string>
+
+
+    <!-- Messages Preferences -->
+
+</resources>

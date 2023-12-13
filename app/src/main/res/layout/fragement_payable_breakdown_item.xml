@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/payable_batch_breakdown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/cashflow_payable_date"
+        android:layout_width="65dp"
+        android:layout_height="20dp"
+        android:text="20231101" />
+
+    <TextView
+        android:id="@+id/cashflow_payable_type"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:text="@string/cashflow_payable_type_transaction" />
+    <TextView
+        android:id="@+id/cashflow_payable_amount"
+        android:layout_width="65dp"
+        android:layout_height="wrap_content"
+        android:text="12,000" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="#aaaaaa"
+        android:layout_marginRight="5dp"/>
+    <TextView
+        android:id="@+id/bankflow_pay_date"
+        android:layout_width="65dp"
+        android:layout_height="20dp"
+        android:text="20231101" />
+    <TextView
+        android:id="@+id/bankflow_pay_type"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bankflow_pay_type_prepayment" />
+
+    <TextView
+        android:id="@+id/bankflow_pay_amount"
+        android:layout_width="65dp"
+        android:layout_height="wrap_content"
+        android:text="12,000" />
+/>
+
+</LinearLayout>

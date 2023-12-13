@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_top">
+
+    <fragment
+        android:id="@+id/nav_top"
+        android:name="com.example.dianzi.fragment.TopFragment"
+        android:label="@string/top_fragment_label"
+        tools:layout="@layout/fragment_top"/>
+
+    <fragment
+        android:id="@+id/nav_transaction_list"
+        android:name="com.example.dianzi.fragment.TransactionFragment"
+        android:label="fragment_item_list"
+        tools:layout="@layout/fragment_transaction_list" >
+        <action
+            android:id="@+id/action_nav_list_to_resultFragment"
+            app:destination="@id/resultFragment" />
+        <action
+            android:id="@+id/action_nav_list_to_transactionDetailsFragment"
+            app:destination="@id/transactionDetailsFragment" />
+        <action
+            android:id="@+id/action_nav_list_to_nav_add"
+            app:destination="@id/nav_add" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_bankflow_pay"
+        android:name="com.example.dianzi.fragment.BankflowPayFragment"
+        android:label="fragment_payment"
+        tools:layout="@layout/fragment_payment" />
+    <fragment
+        android:id="@+id/nav_add"
+        android:name="com.example.dianzi.fragment.NewTransactionFragment"
+        android:label="fragment_new"
+        tools:layout="@layout/fragment_new_transaction" >
+        <action
+            android:id="@+id/action_newFragment_to_nav_list"
+            app:destination="@id/nav_transaction_list" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="com.example.dianzi.fragment.ResultInputFragment"
+        android:label="fragment_result"
+        tools:layout="@layout/fragment_result_input" >
+        <action
+            android:id="@+id/action_resultFragment_to_nav_list"
+            app:destination="@id/nav_transaction_list" />
+    </fragment>
+    <fragment
+        android:id="@+id/transactionDetailsFragment"
+        android:name="com.example.dianzi.fragment.TransactionDetailsFragment"
+        android:label="fragment_transaction_details"
+        tools:layout="@layout/fragment_transaction_details" >
+        <action
+            android:id="@+id/action_transactionDetailsFragment_to_nav_transaction_list"
+            app:destination="@id/nav_transaction_list" />
+    </fragment>
+    <fragment
+        android:id="@+id/newBankflowPayFragment"
+        android:name="com.example.dianzi.fragment.NewBankflowPayFragment"
+        android:label="fragment_new_payment"
+        tools:layout="@layout/fragment_new_payment" >
+        <action
+            android:id="@+id/action_newBankflowPayFragment_to_nav_payment"
+            app:destination="@id/nav_payment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_bankflow_receive"
+        android:name="com.example.dianzi.fragment.BankflowReceiveFragment"
+        android:label="BankStatementFragment" >
+        <action
+            android:id="@+id/action_nav_bankflow_to_newBankStatementFragment"
+            app:destination="@id/newBankStatementFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newBankStatementFragment"
+        android:name="com.example.dianzi.fragment.NewBankflowReceiveFragment"
+        android:label="NewBankStatementFragment" >
+        <action
+            android:id="@+id/action_newBankStatementFragment_to_nav_bankflow"
+            app:destination="@id/nav_bankflow_receive" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_payment"
+        android:name="com.example.dianzi.fragment.PaymentFragment"
+        android:label="PayableFragment" >
+        <action
+            android:id="@+id/action_nav_payment_to_newBankflowPayFragment"
+            app:destination="@id/newBankflowPayFragment" />
+        <action
+            android:id="@+id/action_nav_payment_self"
+            app:destination="@id/nav_payment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_receivable"
+        android:name="com.example.dianzi.fragment.CashflowReceivableFragment"
+        android:label="ReceivableFragment" />
+
+</navigation>

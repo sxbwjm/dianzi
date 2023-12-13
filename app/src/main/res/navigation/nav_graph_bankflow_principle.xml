@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph3"
+    app:startDestination="@id/top">
+
+    <fragment
+        android:id="@+id/top"
+        android:name="com.example.dianzi.fragment.BankflowPrincipleTopFragment"
+        android:label="@string/principle_list"
+        tools:layout="@layout/fragment_bankflow_principle_top">
+
+        <action
+            android:id="@+id/action_Top_to_New"
+            app:destination="@id/new_principle" />
+    </fragment>
+    <fragment
+        android:id="@+id/new_principle"
+        android:name="com.example.dianzi.fragment.BankflowPrincipleNewFragment"
+        android:label="@string/principle_new"
+        tools:layout="@layout/fragment_bankflow_principle_new">
+
+        <action
+            android:id="@+id/action_New_to_Top"
+            app:destination="@id/top" />
+    </fragment>
+</navigation>
