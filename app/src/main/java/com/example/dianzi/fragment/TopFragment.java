@@ -19,6 +19,17 @@ import com.example.dianzi.databinding.FragmentTopBinding;
 import com.example.dianzi.db.DBAsyncTask;
 import com.example.dianzi.db.DataSet;
 import com.example.dianzi.entity.Statistics;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TopFragment extends Fragment {
 
@@ -59,6 +70,25 @@ public class TopFragment extends Fragment {
                         binding.principle.setText(CommonFunc.getAmountTextInt(statistics.totalPrinciple));
                         binding.cashAvailable.setText(CommonFunc.getAmountTextInt(statistics.getCashAvailable()));
                         binding.totalUnreceived.setText(CommonFunc.getAmountTextInt(statistics.totalUnreceivedCashflow));
+
+//                        List<PieEntry> entries = new ArrayList<PieEntry>();
+//                        entries.add(new PieEntry(statistics.getCashAvailable(), getResources().getString(R.string.cash_available)));
+//                        entries.add(new PieEntry(statistics.totalUnreceivedCashflow, getResources().getString(R.string.total_unreceived)));
+//                        PieDataSet pieDataSet = new PieDataSet(entries, getResources().getString(R.string.cash));
+//                        pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+//                        binding.pieChartCash.setData(new PieData(pieDataSet));
+//                        binding.pieChartCash.getLegend().setEnabled(false);
+//                        binding.pieChartCash.getDescription().setText("");
+
+                        List<BarEntry> entries = new ArrayList<BarEntry>();
+                        for(int i = 0; i < statistics.monthlyProfit.size(); i++) {
+                            entries.add(new BarEntry(i, statistics.monthlyProfit.get(i)));
+                        }
+
+                        BarDataSet barDataSet = new BarDataSet(entries, "profit");
+                        BarData barData = new BarData(barDataSet);
+                        binding.chartMonthlyProfit.setData(barData);
+                        binding.chartMonthlyProfit.invalidate();
                     }
 
                 }

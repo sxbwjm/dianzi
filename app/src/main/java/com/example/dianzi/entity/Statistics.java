@@ -3,6 +3,7 @@ package com.example.dianzi.entity;
 import com.example.dianzi.common.CommonFunc;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Statistics {
@@ -16,6 +17,9 @@ public class Statistics {
 
     public float totalUnreceivedCashflow;
     public float totalPrinciple;
+
+    public List<String> transactionMonthList;
+    public List<Float> monthlyProfit;
 
     public long getTotalDays() {
         Date sysDate = new Date();

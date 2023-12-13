@@ -41,6 +41,9 @@ public class DBAsyncTask {
                 statistics.startDate = statisticsDao.getStartDate();
                 statistics.totalUnreceivedCashflow = statisticsDao.getTotalUnreceivedCashflow();
                 statistics.totalPrinciple = statisticsDao.getTotalPrinciple();
+                statistics.transactionMonthList = statisticsDao.getTransactionMonthList();
+                statistics.monthlyProfit = statisticsDao.getTransactionMonthProfit();
+
                 DataSet.getInstance().statistics = statistics;
                 handler.sendMessage(handler.obtainMessage(1, "OK"));
             }
