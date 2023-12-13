@@ -13,4 +13,6 @@ public interface BankflowReceiveDao {
 
     @Insert
     long insert(BankflowReceive bankflowReceive);
+    @Query("delete from bankflow_receive")
+    void deleteAll();
 }

@@ -36,6 +36,7 @@ public class BankflowReceiveRecyclerViewAdapter extends RecyclerView.Adapter<Ban
         holder.viewDate.setText(mValues.get(position).flowDate);
         holder.viewAccountName.setText(mValues.get(position).name);
         holder.viewAmount.setText(CommonFunc.getAmountText(mValues.get(position).amount));
+
     }
 
     @Override

@@ -93,7 +93,7 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
     private void showSettleButton(final ViewHolder holder, PayableBatch payableBatch, float settleAmount) {
             Button settleButton = holder.settleButton;
              settleButton.setText(R.string.settle);
-            if(settleAmount <=0) {
+            if(settleAmount < 0) {
                 settleButton.setEnabled(false);
             } else {
                 settleButton.setEnabled(true);
@@ -143,6 +143,8 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
         bankflowPay.amount = settleAmount;
         bankflowPay.payableBatchId = payableBatch.payableBatchId;
         bankflowPay.payType = BankflowPay.TYPE_SETTLE;
+
+        payableBatch.payDate  = settleDate;
 
       //  DataSet.getInstance().bankflowPayList.add(bankflowPay);
 

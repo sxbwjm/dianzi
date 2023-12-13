@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                             Uri uri = resultData.getData();
 
                             try {
-                                Migration.import_excel(MainActivity.this.getContentResolver().openInputStream(uri));
+                                Migration.import_excel(MainActivity.this, uri);
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }

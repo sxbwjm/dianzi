@@ -27,4 +27,7 @@ public interface CashflowPayableDao {
 
     @Query("delete from cashflow_payable where flow_id = :flowId")
     void deleteById(long flowId);
+
+    @Query("delete from cashflow_payable")
+    void deleteAll();
 }

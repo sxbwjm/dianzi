@@ -16,22 +16,33 @@ public class CommonFunc {
         return df.format(new Date());
     }
 
-    public static Date strToDate(String date) {
+
+    public static Date strToDate(String str) {
         DateFormat df = new SimpleDateFormat(Config.DATE_FORMAT);
         try {
-            return  df.parse(date);
+            return  df.parse(str);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
     }
 
+    public static String dateToStr(Date date) {
+        DateFormat df = new SimpleDateFormat(Config.DATE_FORMAT);
+        return  df.format(date);
+    }
+
     public static String getAmountText(float amount) {
         String text = currencyFormatter.format(amount);
-        if(text.endsWith(".00")) {
-            text = text.substring(0, text.length() - 3);
-        } else if(text.endsWith("0")) {
-            text = text.substring(0, text.length() - 1);
-        }
-        return text;
+//        if(text.endsWith(".00")) {
+//            text = text.substring(0, text.length() - 3);
+//        } else if(text.endsWith("0")) {
+//            text = text.substring(0, text.length() - 1);
+//        }
+        return text.substring(0, text.length() - 1);
+    }
+
+    public static String getAmountTextInt(float amount) {
+        String text = currencyFormatter.format(amount);
+        return text.substring(0, text.length() - 3);
     }
 }

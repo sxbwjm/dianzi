@@ -52,12 +52,13 @@ public class TopFragment extends Fragment {
                     Statistics statistics = DataSet.getInstance().statistics;
                     if(statistics.totalTransactionNumber > 0) {
                         binding.totalTransactionNumber.setText(statistics.totalTransactionNumber + "");
-                        binding.totalProfit.setText(CommonFunc.getAmountText(statistics.getTotalProfit()));
+                        binding.totalProfit.setText(CommonFunc.getAmountTextInt(statistics.getTotalProfit()));
                         binding.totalDays.setText(statistics.getTotalDays() + "");
-                        binding.dailyProfit.setText(statistics.getDailyProfit() + "");
-                        binding.totalUnreceived.setText(CommonFunc.getAmountText(statistics.totalUnreceivedCashflow));
-                        binding.principle.setText(CommonFunc.getAmountText(statistics.totalPrinciple));
-                        binding.cashAvailable.setText(CommonFunc.getAmountText(statistics.getCashAvailable()));
+                        binding.dailyProfit.setText(CommonFunc.getAmountTextInt(statistics.getDailyProfit()));
+
+                        binding.principle.setText(CommonFunc.getAmountTextInt(statistics.totalPrinciple));
+                        binding.cashAvailable.setText(CommonFunc.getAmountTextInt(statistics.getCashAvailable()));
+                        binding.totalUnreceived.setText(CommonFunc.getAmountTextInt(statistics.totalUnreceivedCashflow));
                     }
 
                 }

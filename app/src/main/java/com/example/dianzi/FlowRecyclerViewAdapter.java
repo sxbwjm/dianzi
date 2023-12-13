@@ -1,5 +1,6 @@
 package com.example.dianzi;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dianzi.common.CommonFunc;
 import com.example.dianzi.databinding.FragmentFlowItemBinding;
+import com.example.dianzi.entity.CashflowReceivable;
 import com.example.dianzi.entity.Flow;
 
 import java.util.List;
@@ -55,6 +57,14 @@ public class FlowRecyclerViewAdapter extends RecyclerView.Adapter<FlowRecyclerVi
         holder.viewPayDate.setText(mValues.get(position).flowDate);
         holder.viewPayee.setText(mValues.get(position).name);
         holder.viewAmount.setText(CommonFunc.getAmountText(mValues.get(position).amount));
+        if(holder.mItem instanceof CashflowReceivable) {
+            CashflowReceivable c = (CashflowReceivable)holder.mItem;
+            if(c.bankflowId != 0) {
+                holder.itemRow.setBackgroundColor(Color.GRAY);
+            } else {
+                holder.itemRow.setBackgroundColor(Color.WHITE);
+            }
+        }
     }
 
     @Override

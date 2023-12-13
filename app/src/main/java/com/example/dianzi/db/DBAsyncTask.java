@@ -47,13 +47,15 @@ public class DBAsyncTask {
         });
     }
 
+    public long inserTransactionHelper(TransactionData transaction) {
+       return db.transactionDao().insert(transaction);
+    }
     public void insertTransaction(TransactionData transaction) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
             public void run() {
-
-                db.transactionDao().insert(transaction);
+                inserTransactionHelper(transaction);
             }
         });
     }
@@ -79,56 +81,52 @@ public class DBAsyncTask {
             }
         });
     }
-    public void updateTransaction(TransactionData transaction) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
 
-                CashflowPayable cashflowPayable = null;
-                CashflowReceivable cashflowReceivable = null;
-                // fist time input result
-                if(transaction.cashflowPayableId <=0) {
-                    cashflowPayable = new CashflowPayable(transaction);
-                    cashflowPayable.flowId = db.cashflowPayableDao().insert(cashflowPayable);
-                    transaction.cashflowPayableId = cashflowPayable.flowId;
+    public void updateTransationHelper(TransactionData transaction) {
+        CashflowPayable cashflowPayable = null;
+        CashflowReceivable cashflowReceivable = null;
+        // fist time input result
+        if(transaction.cashflowPayableId <=0) {
+            cashflowPayable = new CashflowPayable(transaction);
+            cashflowPayable.flowId = db.cashflowPayableDao().insert(cashflowPayable);
+            transaction.cashflowPayableId = cashflowPayable.flowId;
 
-                    cashflowReceivable = new CashflowReceivable(transaction);
-                    cashflowReceivable.flowId = db.cashflowReceivableDao().insert(cashflowReceivable);
-                    transaction.cashflowReceivableId = cashflowReceivable.flowId;
-                }
-                // update result
-                else {
-                    cashflowPayable = db.cashflowPayableDao().getById(transaction.cashflowPayableId);
-                    cashflowPayable.amount = transaction.payable;
-                    db.cashflowPayableDao().update(cashflowPayable);
+            cashflowReceivable = new CashflowReceivable(transaction);
+            cashflowReceivable.flowId = db.cashflowReceivableDao().insert(cashflowReceivable);
+            transaction.cashflowReceivableId = cashflowReceivable.flowId;
+        }
+        // update result
+        else {
+            cashflowPayable = db.cashflowPayableDao().getById(transaction.cashflowPayableId);
+            cashflowPayable.amount = transaction.payable;
+            db.cashflowPayableDao().update(cashflowPayable);
 
-                    cashflowReceivable = db.cashflowReceivableDao().getById(transaction.cashflowReceivableId);
-                    cashflowReceivable.amount = transaction.receivable;
-                    db.cashflowReceivableDao().update(cashflowReceivable);
-                }
+            cashflowReceivable = db.cashflowReceivableDao().getById(transaction.cashflowReceivableId);
+            cashflowReceivable.amount = transaction.receivable;
+            db.cashflowReceivableDao().update(cashflowReceivable);
+        }
 
-                // add to payable batch
-                PayableBatch payableBatch = db.payableBatchDao().getCurrentPayable(cashflowPayable.name);
-                long payableBatchId = 0;
-                if(payableBatch == null) {
-                    payableBatch = new PayableBatch();
-                    payableBatch.payee = cashflowPayable.name;
-                    payableBatchId = db.payableBatchDao().insert(payableBatch);
+        // add to payable batch
+        PayableBatch payableBatch = db.payableBatchDao().getCurrentPayable(cashflowPayable.name);
+        long payableBatchId = 0;
+        if(payableBatch == null) {
+            payableBatch = new PayableBatch();
+            payableBatch.payee = cashflowPayable.name;
+            payableBatchId = db.payableBatchDao().insert(payableBatch);
 
 
-                } else {
-                    payableBatchId = payableBatch.payableBatchId;
-                    payableBatch.addCashPayable(cashflowPayable);
-                    db.payableBatchDao().update(payableBatch);
-                }
+        } else {
+            payableBatchId = payableBatch.payableBatchId;
+            payableBatch.addCashPayable(cashflowPayable);
+            db.payableBatchDao().update(payableBatch);
+        }
 
-                cashflowPayable.payableBatchId = payableBatchId;
-                db.cashflowPayableDao().update(cashflowPayable);
+        cashflowPayable.payableBatchId = payableBatchId;
+        db.cashflowPayableDao().update(cashflowPayable);
 
 
-           //     PayableBatch payableBatch = db.payableBatchDao().getPayableById(cashflowPayable.payableBatchId);
-                // update payable if not paid yet
+        //     PayableBatch payableBatch = db.payableBatchDao().getPayableById(cashflowPayable.payableBatchId);
+        // update payable if not paid yet
 //                if(payableBatch.payDate == null) {
 //                    payableBatch.amount = payableBatch.amount + transaction.payable;
 //                    db.payableBatchDao().update(payableBatch);
@@ -137,12 +135,28 @@ public class DBAsyncTask {
 //                else {
 //
 //                }
-                //TODO: generate adjust after paid
+        //TODO: generate adjust after paid
 
-                db.transactionDao().update(transaction);
+        db.transactionDao().update(transaction);
+    }
+    public void updateTransaction(TransactionData transaction) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                updateTransationHelper(transaction);
             }
         });
     }
+
+    public void deleteAllMigrationHelper() {
+        db.transactionDao().deleteAll();
+        db.bankflowPayDao().deleteAll();
+        db.cashflowReceivableDao().deleteAll();
+        db.cashflowPayableDao().deleteAll();
+        db.payableBatchDao().deleteAll();
+    }
+
 
     public void getAllTransactions(Handler handler){
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -200,6 +214,18 @@ public class DBAsyncTask {
         });
     }
 
+    public void getAllCashflowReceivables(Handler handler){
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                DataSet.getInstance().allCashflowReceivalbeList = db.cashflowReceivableDao().getAll();
+                handler.sendMessage(handler.obtainMessage(1, "OK"));
+            }
+        });
+    }
+
+
 //    public void getCurrentPayableBatches2(Handler handler) {
 //        ExecutorService executor = Executors.newSingleThreadExecutor();
 //        executor.execute(new Runnable() {
@@ -217,31 +243,24 @@ public class DBAsyncTask {
 //        });
 //    }
 
+
+
     public void insertPrePayment(BankflowPay prepayment) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                PayableBatch payableBatch = db.payableBatchDao().getCurrentPayable(prepayment.name);
-                long payableBatchId = 0;
-                if(payableBatch == null) {
-                    payableBatch = new PayableBatch(prepayment);
-//                    payableBatch.payee = bankflowPay.name;
-//                    payableBatch.amount = -bankflowPay.amount;
-                    payableBatchId = db.payableBatchDao().insert(payableBatch);
-                } else {
-                  //  prepayment.payableBatchId = payableBatch.payableBatchId;
-                    //payableBatch.addBankflowPay(prepayment);
-                    //     payableBatch.amount = payableBatch.amount - bankflowPay.amount;
-                  //  db.payableBatchDao().update(payableBatch);
-
-                    payableBatchId = payableBatch.payableBatchId;
-                }
-
-                prepayment.payableBatchId = payableBatchId;
-                db.bankflowPayDao().insert(prepayment);
+                db.insertPrepaymentHelper(prepayment);
             }
         });
+    }
+
+    public void insertSettlePaymentHelper(BankflowPay settlePayment, PayableBatch payableBatch) {
+        settlePayment.payableBatchId = payableBatch.payableBatchId;
+        db.bankflowPayDao().insert(settlePayment);
+
+
+        db.payableBatchDao().update(payableBatch);
     }
 
     public void insertSettlePayment(BankflowPay settlePayment, PayableBatch payableBatch, Handler handler) {
@@ -250,11 +269,7 @@ public class DBAsyncTask {
             @Override
             public void run() {
                 //PayableBatch payableBatch = db.payableBatchDao().getCurrentPayable(settlePayment.name);
-                settlePayment.payableBatchId = payableBatch.payableBatchId;
-                db.bankflowPayDao().insert(settlePayment);
-
-                payableBatch.payDate = CommonFunc.getSystemDateString();
-                db.payableBatchDao().update(payableBatch);
+                insertSettlePaymentHelper(settlePayment, payableBatch);
                 handler.sendMessage(handler.obtainMessage(1, "OK"));
             }
         });
@@ -271,12 +286,17 @@ public class DBAsyncTask {
             }
         });
     }
-    public void insertBankflowReceive(BankflowReceive bankflowReceive) {
+    public void insertBankflowReceive(BankflowReceive bankflowReceive, List<CashflowReceivable> matchList) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                db.bankflowReceiveDao().insert(bankflowReceive);
+
+                long bankflowId = db.bankflowReceiveDao().insert(bankflowReceive);
+                for(CashflowReceivable c : matchList) {
+                    c.bankflowId = bankflowId;
+                    db.cashflowReceivableDao().update(c);
+                }
             }
         });
     }

@@ -23,6 +23,7 @@ public class DataSet {
     public List<PayableBatchWithBreakdown> latestPayableBatchWithBreakdownList;
 
     public List<CashflowReceivable> unReceivedCashflowReceivalbeList;
+    public List<CashflowReceivable> allCashflowReceivalbeList;
     public Statistics statistics;
     private DataSet() {
 

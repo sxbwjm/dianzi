@@ -18,7 +18,6 @@ import com.example.dianzi.entity.CashflowReceivableDao;
 import com.example.dianzi.entity.PayableBatch;
 import com.example.dianzi.entity.PayableBatchDao;
 import com.example.dianzi.entity.PayableBatchWithBreakdownDao;
-import com.example.dianzi.entity.PaymentDao;
 import com.example.dianzi.entity.Sender;
 import com.example.dianzi.entity.StatisticsDao;
 import com.example.dianzi.entity.TransactionData;
@@ -48,5 +47,53 @@ import com.example.dianzi.entity.TransactionDao;
 
     public abstract BankflowPrincipleDao bankflowPrincipleDao();
 
+    public void insertPrepaymentHelper(BankflowPay prepayment) {
+        PayableBatch payableBatch = payableBatchDao().getCurrentPayable(prepayment.name);
+        long payableBatchId = 0;
+        if(payableBatch == null) {
+            payableBatch = new PayableBatch(prepayment);
+//                    payableBatch.payee = bankflowPay.name;
+//                    payableBatch.amount = -bankflowPay.amount;
+            payableBatchId = payableBatchDao().insert(payableBatch);
+        } else {
+            //  prepayment.payableBatchId = payableBatch.payableBatchId;
+            //payableBatch.addBankflowPay(prepayment);
+            //     payableBatch.amount = payableBatch.amount - bankflowPay.amount;
+            //  db.payableBatchDao().update(payableBatch);
+
+            payableBatchId = payableBatch.payableBatchId;
+        }
+
+        prepayment.payableBatchId = payableBatchId;
+        bankflowPayDao().insert(prepayment);
+    }
+
+    public void insertCashflowPayable(CashflowPayable cashflowPayable) {
+
+
+        PayableBatch payableBatch = payableBatchDao().getCurrentPayable(cashflowPayable.name);
+        long payableBatchId = 0;
+        if(payableBatch == null) {
+            payableBatch = new PayableBatch();
+            payableBatch.payee = cashflowPayable.name;
+            payableBatchId = payableBatchDao().insert(payableBatch);
+
+
+        } else {
+            payableBatchId = payableBatch.payableBatchId;
+            payableBatch.addCashPayable(cashflowPayable);
+            payableBatchDao().update(payableBatch);
+        }
+
+        cashflowPayable.payableBatchId = payableBatchId;
+        cashflowPayableDao().insert(cashflowPayable);
+
+    }
+
+    public void insertSettlePaymentHelper(BankflowPay settlePayment, PayableBatch payableBatch) {
+        settlePayment.payableBatchId = payableBatch.payableBatchId;
+        bankflowPayDao().insert(settlePayment);
+        payableBatchDao().update(payableBatch);
+    }
 
 }

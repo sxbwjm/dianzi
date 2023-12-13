@@ -15,4 +15,7 @@ public interface BankflowPayDao {
 
     @Insert
     long insert(BankflowPay bankflowPay);
+
+    @Query("delete from bankflow_pay")
+    void deleteAll();
 }

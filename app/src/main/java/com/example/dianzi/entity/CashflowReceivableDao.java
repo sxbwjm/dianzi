@@ -9,7 +9,7 @@ import java.util.List;
 
 @Dao
 public interface CashflowReceivableDao {
-    @Query("select * from cashflow_receivable")
+    @Query("select * from cashflow_receivable order by flow_date desc")
     List<CashflowReceivable> getAll();
 
     @Query("select * from cashflow_receivable where flow_id = :id")
@@ -24,4 +24,7 @@ public interface CashflowReceivableDao {
 
     @Query("delete from cashflow_receivable where flow_id = :flowId")
     void deleteById(long flowId);
+
+    @Query("delete from cashflow_receivable")
+    void deleteAll();
 }

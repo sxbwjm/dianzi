@@ -93,6 +93,6 @@ public class TransactionData implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s,%s%s,%s,%s,%f,%f", senderName,inputDate,sequence, plateNumber, accountName, weight, receivable);
+        return String.format("%s,%s%s,%s,%s,%f,%f,%f,%f,%f", senderName,inputDate,sequence, plateNumber, accountName, weight, price, receivable, fee, payable);
     }
 }

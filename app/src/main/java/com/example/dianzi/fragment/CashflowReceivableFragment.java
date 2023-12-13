@@ -103,19 +103,18 @@ public class CashflowReceivableFragment extends Fragment {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
 
-        MainActivity activity = (MainActivity)getActivity();
         Handler handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 if(msg.obj != null) {
                    // List<Payment> payments = (List<Payment>)msg.obj;
-                    recyclerView.setAdapter(new FlowRecyclerViewAdapter(DataSet.getInstance().unReceivedCashflowReceivalbeList));
+                    recyclerView.setAdapter(new FlowRecyclerViewAdapter(DataSet.getInstance().allCashflowReceivalbeList));
                 }
             }
         };
 
 
-        dbAsyncTask.getUnReceivedCashflowReceivables(handler);
+        dbAsyncTask.getAllCashflowReceivables(handler);
 
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), (new LinearLayoutManager(getActivity()).getOrientation())));
 

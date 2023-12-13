@@ -15,11 +15,15 @@ public interface TransactionDao {
     List<TransactionData> getAll();
 
     @Insert
-    void insert(TransactionData transaction);
+    long insert(TransactionData transaction);
 
     @Update
     void update(TransactionData transaction);
 
     @Delete
     void delete(TransactionData transaction);
+
+    @Query("delete from transaction_data")
+    void deleteAll();
+
 }
