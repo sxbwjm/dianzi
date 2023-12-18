@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ import com.example.dianzi.common.TransactionImageNew;
 import com.example.dianzi.common.TransactionImageResult;
 import com.example.dianzi.databinding.FragmentTransactionNewImageBinding;
 import com.example.dianzi.databinding.FragmentTransactionResultImageBinding;
+import com.example.dianzi.entity.TransactionData;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;
@@ -69,6 +71,32 @@ public class TransactionResultImageFragment extends Fragment {
 
                 MediaStore.Images.Media.insertImage(view.getContext().getContentResolver(),bitmap, "", "" );
                 Toast.makeText(getContext(), "saved", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+        binding.buttonSplitPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TransactionImageResult transactionImageResult = (TransactionImageResult)((ImageProcessActivity)getActivity()).getTransactionImage();
+                if(transactionImageResult != null) {
+                    processResultImage(transactionImageResult);
+                    binding.buttonSave.setVisibility(Button.VISIBLE);
+                }
+
+            }
+        });
+
+        binding.buttonOcr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TransactionImageResult transactionImageResult = (TransactionImageResult)((ImageProcessActivity)getActivity()).getTransactionImage();
+                if(transactionImageResult != null) {
+                    List<TransactionData>  transactionDataList = transactionImageResult.getTransactionDataList();
+                    for(TransactionData t : transactionDataList) {
+                        System.out.println(t);
+                    }
+                }
 
             }
         });

@@ -11,7 +11,7 @@ public abstract class TransactionImage implements Serializable {
     protected Bitmap bitmap;
     protected Text text;
 
-    abstract public TransactionData getTransactionData();
+  //  abstract public TransactionData getTransactionData();
 
     public Bitmap getBitmap() {
         return bitmap;

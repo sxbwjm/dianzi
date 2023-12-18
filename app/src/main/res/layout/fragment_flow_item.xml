@@ -8,7 +8,7 @@
 
 
         <TextView
-            android:id="@+id/pay_date"
+            android:id="@+id/flow_date"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            app:layout_constraintLeft_toRightOf="@+id/pay_date"
+            app:layout_constraintLeft_toRightOf="@+id/flow_date"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />

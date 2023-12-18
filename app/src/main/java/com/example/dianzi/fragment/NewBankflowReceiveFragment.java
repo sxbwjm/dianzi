@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.service.autofill.Dataset;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,16 +28,11 @@ import com.example.dianzi.adapter.FlowRecyclerViewAdapter;
 import com.example.dianzi.MainApplication;
 import com.example.dianzi.R;
 import com.example.dianzi.activity.MainActivity;
-import com.example.dianzi.common.SubsetSum;
 import com.example.dianzi.db.DBAsyncTask;
 import com.example.dianzi.db.DataSet;
 import com.example.dianzi.entity.BankflowReceive;
 import com.example.dianzi.entity.CashflowReceivable;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -100,7 +94,7 @@ public class NewBankflowReceiveFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_new_bank_statement, container, false);
+        rootView = inflater.inflate(R.layout.fragment_new_bankflow_receive, container, false);
         init(rootView);
         rootView.findViewById(R.id.button_save).setOnClickListener(new View.OnClickListener() {
             @Override

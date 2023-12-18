@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import com.example.dianzi.entity.TransactionData;
 import com.google.mlkit.vision.text.Text;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +16,8 @@ public class TransactionImageNew extends TransactionImage{
         this.text = text;
     }
 
-    @Override
+
+
     public TransactionData getTransactionData() {
         String result = text.getText();
          System.out.println(result);

@@ -54,7 +54,7 @@ public class FlowRecyclerViewAdapter extends RecyclerView.Adapter<FlowRecyclerVi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.itemRow.setOnClickListener(new PaymentDetailsClickListener(position));
-        holder.viewPayDate.setText(mValues.get(position).flowDate);
+        holder.viewFlowDate.setText(mValues.get(position).flowDate);
         holder.viewPayee.setText(mValues.get(position).name);
         holder.viewAmount.setText(CommonFunc.getAmountText(mValues.get(position).amount));
         if(holder.mItem instanceof CashflowReceivable) {
@@ -73,7 +73,7 @@ public class FlowRecyclerViewAdapter extends RecyclerView.Adapter<FlowRecyclerVi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView viewPayDate;
+        public final TextView viewFlowDate;
         public final TextView viewPayee;
         public final TextView viewAmount;
         public final ConstraintLayout itemRow;
@@ -84,7 +84,7 @@ public class FlowRecyclerViewAdapter extends RecyclerView.Adapter<FlowRecyclerVi
 
         public ViewHolder(FragmentFlowItemBinding binding) {
             super(binding.getRoot());
-            viewPayDate = binding.payDate;
+            viewFlowDate = binding.flowDate;
             viewPayee = binding.payee;
             viewAmount = binding.amount;
             itemRow = binding.itemRow;

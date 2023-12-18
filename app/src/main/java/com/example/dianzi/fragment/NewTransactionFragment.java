@@ -24,6 +24,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -79,7 +80,7 @@ public class NewTransactionFragment extends Fragment {
         transaction.accountName = ((Spinner)view.findViewById(R.id.input_account_name)).getSelectedItem().toString();
         transaction.weight = Float.parseFloat(((TextView)view.findViewById(R.id.input_weight)).getText().toString());
 
-        MainActivity activity = (MainActivity)getActivity();
+   //     MainActivity activity = (MainActivity)getActivity();
         DBAsyncTask dbAsyncTask = new DBAsyncTask(MainApplication.instance.getDB());
         dbAsyncTask.insertTransaction(transaction);
        // MainActivity.transactions.add(transaction);
@@ -107,16 +108,18 @@ public class NewTransactionFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 saveTransaction(view);
-                ((MainActivity)getActivity()).resetTransactionImage();
-                NavHostFragment.findNavController(NewTransactionFragment.this).navigate(R.id.action_newFragment_to_nav_list);
+                //((MainActivity)getActivity()).resetTransactionImage();
+                navigateBack();
+
             }
         });
 
         binding.buttonCancelInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).resetTransactionImage();
-                NavHostFragment.findNavController(NewTransactionFragment.this).navigate(R.id.action_newFragment_to_nav_list);
+                //((MainActivity)getActivity()).resetTransactionImage();
+               // NavHostFragment.findNavController(NewTransactionFragment.this).navigate(R.id.action_newFragment_to_nav_list);
+                navigateBack();
             }
         });
 
@@ -169,7 +172,15 @@ public class NewTransactionFragment extends Fragment {
             }
         });
 
-        transactionImageNew = (TransactionImageNew)((MainActivity)getActivity()).getTransactionImage();
+        FragmentActivity activity = getActivity();
+        if(activity instanceof ImageProcessActivity) {
+            transactionImageNew = (TransactionImageNew)((ImageProcessActivity)getActivity()).getTransactionImage();
+        }
+        else {
+            transactionImageNew = null;
+        }
+
+
 
        // View view = binding.getRoot();
 
@@ -177,6 +188,16 @@ public class NewTransactionFragment extends Fragment {
 
         return binding.getRoot();
 
+    }
+
+    private void navigateBack() {
+        FragmentActivity activity = getActivity();
+        if(activity instanceof ImageProcessActivity) {
+            Intent intent = new Intent(activity, MainActivity.class);
+            startActivity(intent);
+        } else {
+            NavHostFragment.findNavController(NewTransactionFragment.this).navigate(R.id.action_newFragment_to_nav_list);
+        }
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {

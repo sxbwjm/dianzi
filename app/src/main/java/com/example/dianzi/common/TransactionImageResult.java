@@ -17,6 +17,7 @@ public class TransactionImageResult extends TransactionImage {
     int headerPositionEnd;
     List<Integer> dataRowPositionEndList;
     public TransactionImageResult(Bitmap bitmap, Text text) {
+        this.text = text;
         this.bitmap = bitmap;
     }
     public int analyzeRows() {
@@ -104,10 +105,46 @@ public class TransactionImageResult extends TransactionImage {
 
     }
 
-    @Override
+    public List<TransactionData> getTransactionDataList() {
+        List<TransactionData> transactionDataList = new ArrayList<TransactionData>();
+        List<Integer> rowYList = new ArrayList<Integer>();
+
+        Matcher m;
+        // detect how many rows
+        for(Text.TextBlock block : text.getTextBlocks()) {
+
+            String result = block.getText();
+            m  = Pattern.compile("([0-9]{4})年([0-9]{2})月([0-9]{2})日").matcher(result);
+            if(m.find()) {
+                TransactionData transactionData = new TransactionData();
+                transactionDataList.add(transactionData);
+                rowYList.add(block.getBoundingBox().top);
+                System.out.println("Y: " + block.getBoundingBox().top);
+            }
+
+        }
+
+        for(Text.TextBlock block : text.getTextBlocks()) {
+            String result = block.getText();
+            System.out.println(block.getBoundingBox() + ":" + result);
+            String plate = "";
+            m  = Pattern.compile("[0-9]{4}").matcher(result);
+//            if(m.find()) {
+//                plate = m.group();
+//                System.out.println("Y: " + block.getBoundingBox().top);
+//                int row = rowYList.indexOf(block.getBoundingBox().top);
+//                transactionDataList.get(row).plateNumber = plate;
+//            }
+
+
+        }
+
+        return transactionDataList;
+    }
+
     public TransactionData getTransactionData() {
         String result = text.getText();
-        //  System.out.println(result);
+          System.out.println(result);
         Matcher m = null;
 
         TransactionData transactionData = new TransactionData();

@@ -74,11 +74,9 @@ public class ImageProcessActivity extends AppCompatActivity {
                     } else {
                         NavController navController = Navigation.findNavController(ImageProcessActivity.this, R.id.nav_host_fragment_content_image_process);
                         if (transactionImage instanceof TransactionImageNew) {
-                            navController.navigate(R.id.fragment_transaction_new_image);
-                            System.out.println("new trans");
+                            navController.navigate(R.id.fragment_new_transaction);
                         } else if(transactionImage instanceof TransactionImageResult) {
                             navController.navigate(R.id.fragment_transaction_result_image);
-                            System.out.println("result");
                         }
                     }
 
@@ -109,12 +107,6 @@ public class ImageProcessActivity extends AppCompatActivity {
             }
         });
 
-        binding.buttonOpenPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openImage();
-            }
-        });
 
         openImage();
 

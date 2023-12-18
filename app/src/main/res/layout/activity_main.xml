@@ -27,16 +27,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:backgroundTint="@color/design_default_color_secondary"
-                android:text=""
-                android:drawableLeft="@drawable/baseline_crop_24"/>
-            <Button
-                android:id="@+id/button_open_photo"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:background="@android:color/transparent"
-                android:text=""
-                android:drawableLeft="@drawable/baseline_image_24"/>
+                android:drawableLeft="@drawable/baseline_image_24"
+                android:drawableTint="#303F9F"
+                android:text="" />
         </com.google.android.material.appbar.MaterialToolbar>
 
 

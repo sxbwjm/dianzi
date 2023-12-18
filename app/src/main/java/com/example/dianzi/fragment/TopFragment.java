@@ -73,22 +73,16 @@ public class TopFragment extends Fragment {
                     Statistics statistics = DataSet.getInstance().statistics;
                     if(statistics.totalTransactionNumber > 0) {
                         binding.totalTransactionNumber.setText(statistics.totalTransactionNumber + "");
-                        binding.totalProfit.setText(CommonFunc.getAmountTextInt(statistics.getTotalProfit()));
+                        //binding.totalProfit.setText(CommonFunc.getAmountTextInt(statistics.getTotalProfit()));
                         binding.totalDays.setText(statistics.getTotalDays() + "");
                         binding.dailyProfit.setText(CommonFunc.getAmountTextInt(statistics.getDailyProfit()));
 
-                        binding.principle.setText(CommonFunc.getAmountTextInt(statistics.totalPrinciple));
-                        binding.cashAvailable.setText(CommonFunc.getAmountTextInt(statistics.getCashAvailable()));
-                        binding.totalUnreceived.setText(CommonFunc.getAmountTextInt(statistics.totalUnreceivedCashflow));
+                       // binding.principle.setText(CommonFunc.getAmountTextInt(statistics.totalPrinciple));
+                      //  binding.cashAvailable.setText(CommonFunc.getAmountTextInt(statistics.getCashAvailable()));
+                     //   binding.totalUnreceived.setText(CommonFunc.getAmountTextInt(statistics.totalUnreceivedCashflow));
 
-//                        List<PieEntry> entries = new ArrayList<PieEntry>();
-//                        entries.add(new PieEntry(statistics.getCashAvailable(), getResources().getString(R.string.cash_available)));
-//                        entries.add(new PieEntry(statistics.totalUnreceivedCashflow, getResources().getString(R.string.total_unreceived)));
-//                        PieDataSet pieDataSet = new PieDataSet(entries, getResources().getString(R.string.cash));
-//                        pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-//                        binding.pieChartCash.setData(new PieData(pieDataSet));
-//                        binding.pieChartCash.getLegend().setEnabled(false);
-//                        binding.pieChartCash.getDescription().setText("");
+                        buildPrinciplePieChart(statistics);
+                        buildCashPieChart(statistics);
                         buildMonthlyProfitChart(statistics);
                         buildDailylyAvailableCashChart(statistics);
                     }
@@ -102,16 +96,49 @@ public class TopFragment extends Fragment {
         dbAsyncTask.getStatistics(handler);
     }
 
-//    private void buildCashPieChart(Statistics statistics) {
-//        List<PieEntry> entries = new ArrayList<PieEntry>();
-//        entries.add(new PieEntry(statistics.getCashAvailable(), getResources().getString(R.string.cash_available)));
-//        entries.add(new PieEntry(statistics.totalUnreceivedCashflow, getResources().getString(R.string.total_unreceived)));
-//        PieDataSet pieDataSet = new PieDataSet(entries, getResources().getString(R.string.cash));
-//        pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-//        binding.pieChartCash.setData(new PieData(pieDataSet));
-//        binding.pieChartCash.getLegend().setEnabled(false);
-//        binding.pieChartCash.getDescription().setText("");
-//    }
+    private void buildPrinciplePieChart(Statistics statistics) {
+        List<PieEntry> entries = new ArrayList<PieEntry>();
+        entries.add(new PieEntry(statistics.getTotalProfit(), getResources().getString(R.string.total_profit)));
+        entries.add(new PieEntry(statistics.totalPrinciple, getResources().getString(R.string.principle)));
+        PieDataSet pieDataSet = new PieDataSet(entries, getResources().getString(R.string.cash));
+        pieDataSet.setValueTextSize(12);
+        pieDataSet.setValueTextColor(Color.WHITE);
+
+
+        pieDataSet.setColors(Color.GREEN, Color.BLUE);
+        PieChart chart =   binding.chartPrincipleProfit;
+        chart.setData(new PieData(pieDataSet));
+        chart.getLegend().setEnabled(false);
+        chart.getDescription().setText("");
+        chart.setEntryLabelTextSize(8);
+        chart.setCenterText(getResources().getString(R.string.cash));
+        chart.setHoleRadius(40);
+        chart.setTransparentCircleRadius(40);
+
+        chart.invalidate();
+    }
+
+    private void buildCashPieChart(Statistics statistics) {
+        List<PieEntry> entries = new ArrayList<PieEntry>();
+        entries.add(new PieEntry(statistics.getCashAvailable(), getResources().getString(R.string.cash_status_available)));
+        entries.add(new PieEntry(statistics.totalUnreceivedCashflow, getResources().getString(R.string.cash_status_unreceived)));
+        PieDataSet pieDataSet = new PieDataSet(entries, getResources().getString(R.string.cash_status));
+        pieDataSet.setValueTextSize(10);
+        pieDataSet.setValueTextColor(Color.WHITE);
+
+
+        pieDataSet.setColors(Color.BLUE, Color.RED);
+        PieChart chart =   binding.chartCashStatus;
+        chart.setData(new PieData(pieDataSet));
+        chart.getLegend().setEnabled(false);
+        chart.getDescription().setText("");
+        chart.setEntryLabelTextSize(8);
+        chart.setCenterText(getResources().getString(R.string.cash_status));
+        chart.setHoleRadius(40);
+        chart.setTransparentCircleRadius(40);
+
+        chart.invalidate();
+    }
 
     private void buildMonthlyProfitChart(Statistics statistics) {
             List<BarEntry> entries = new ArrayList<BarEntry>();
@@ -123,7 +150,7 @@ public class TopFragment extends Fragment {
             barDataSet.setColor(Color.BLUE);
             BarData barData = new BarData(barDataSet);
             barData.setBarWidth(0.8f);
-            barData.setValueTextSize(12);
+            barData.setValueTextSize(10);
 
 
             BarChart barChart = binding.chartMonthlyProfit;
@@ -138,6 +165,8 @@ public class TopFragment extends Fragment {
            // barChart.getXAxis().setDrawAxisLine(false);
             barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
             barChart.getDescription().setEnabled(false);
+
+
             barChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
 
                 @Override
@@ -169,8 +198,11 @@ public class TopFragment extends Fragment {
         lineDataSet.setDrawCircles(false);
         LineData lineData = new LineData(lineDataSet);
         LineChart chart = binding.chartDailyAvailableCash;
+
         chart.getLegend().setEnabled(false);
         chart.getAxisRight().setEnabled(false);
+       // chart.getAxisLeft().setDrawGridLines(false);
+      //  chart.getXAxis().setDrawGridLines(false);
         chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         chart.getDescription().setEnabled(false);
         chart.setData(lineData);

@@ -14,10 +14,14 @@
     <string name="total_transaction_number">车数</string>
     <string name="total_days">天数</string>
     <string name="total_profit">总利润</string>
+    <string name="monthly_profit">月利润</string>
     <string name="daily_profit">日平均</string>
     <string name="total_unreceived">未收款</string>
     <string name="principle">本 金</string>
-    <string name="cash_available">剩余资金</string>
+
+    <string name="cash_status">现金流</string>
+    <string name="cash_status_unreceived">未收款</string>
+    <string name="cash_status_available">现金</string>
     <string name="cash">资金</string>
 
 

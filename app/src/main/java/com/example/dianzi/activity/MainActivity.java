@@ -156,12 +156,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        binding.buttonOpenPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               openImage();
-            }
-        });
+//        binding.buttonOpenPhoto.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//               openImage();
+//            }
+//        });
     }
 
     @Override
