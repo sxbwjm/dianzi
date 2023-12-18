@@ -6,6 +6,36 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".activity.ImageProcessActivity">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/design_default_color_secondary_variant"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            >
+            <Button
+                android:id="@+id/button_return"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@android:color/transparent"
+                android:text=""
+                android:drawableLeft="@drawable/baseline_keyboard_return_24"/>
+            <Button
+                android:id="@+id/button_open_photo"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@android:color/transparent"
+                android:text=""
+                android:drawableLeft="@drawable/baseline_image_24"/>
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_image_process" />
 

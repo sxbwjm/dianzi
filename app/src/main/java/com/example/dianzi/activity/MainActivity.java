@@ -2,13 +2,17 @@ package com.example.dianzi.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.example.dianzi.MainApplication;
-import com.example.dianzi.Migration;
+import com.example.dianzi.common.CommonFunc;
+import com.example.dianzi.common.Migration;
 import com.example.dianzi.R;
-import com.example.dianzi.common.PhotoViewCommon;
+import com.example.dianzi.common.OCR;
+import com.example.dianzi.common.TransactionImage;
+import com.example.dianzi.common.TransactionImageNew;
+import com.example.dianzi.common.TransactionImageResult;
 import com.example.dianzi.db.AppDatabase;
 import com.example.dianzi.entity.TransactionData;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -26,11 +30,14 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.dianzi.databinding.ActivityMainBinding;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +46,23 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
-    private AppDatabase db;
+    private TransactionImage transactionImage = null;
+
+    ActivityResultLauncher imageLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if(result.getResultCode() == Activity.RESULT_OK) {
+                        Intent resultData = result.getData();
+                        if(resultData != null) {
+                            Uri uri = resultData.getData();
+                            processImage(uri);
+                        }
+                    }
+                }
+            }
+    );
 
     static public List<TransactionData> transactions = new ArrayList<TransactionData>();
 
@@ -54,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
                             Uri uri = resultData.getData();
 
                             try {
-                                Migration.import_excel(MainActivity.this, uri);
+                                Migration migration = new Migration(MainActivity.this);
+                                migration.import_excel(uri);
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }
@@ -63,6 +87,50 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
     );
+
+    private void processImage(Uri uri) {
+        Bitmap bitmap = CommonFunc.getBitmap(uri);
+        OCR ocr = new OCR(bitmap);
+        Handler handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                if(msg.obj != null) {
+                    transactionImage = ocr.getImage();
+                    if(transactionImage == null) {
+                        Toast.makeText(MainActivity.this, "image type wrong", Toast.LENGTH_LONG).show();
+                    } else {
+                        NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment_content_main);
+                        navController.navigate(R.id.nav_transaction_list);
+                        if (transactionImage instanceof TransactionImageNew) {
+                            navController.navigate(R.id.nav_add);
+                            System.out.println("new trans");
+                        } else if(transactionImage instanceof TransactionImageResult) {
+                         //   navController.navigate(R.id.fragment_transaction_result_image);
+                            System.out.println("result");
+                        }
+                    }
+
+                }
+            }
+        };
+        ocr.recognize(handler);
+        // processResultImage(bitmap);
+    }
+
+    private void openImage() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        imageLauncher.launch(intent);
+    }
+
+    public TransactionImage getTransactionImage() {
+        return transactionImage;
+    }
+
+    public void resetTransactionImage() {
+        transactionImage = null;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
        // appBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_top, R.id.nav_payment, R.id.nav_list).build();
+       // appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(bottomNav, navController);
@@ -85,6 +154,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, ImageProcessActivity.class);
                 startActivity(intent);
+            }
+        });
+        binding.buttonOpenPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               openImage();
             }
         });
     }

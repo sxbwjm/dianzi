@@ -3,11 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph3"
-    app:startDestination="@id/image_process_top">
+    app:startDestination="@id/fragment_transaction_new_image">
 
     <fragment
-        android:id="@+id/image_process_top"
-        android:name="com.example.dianzi.fragment.ImageProcessTopFragment"
-        android:label="@string/principle_list"
-        tools:layout="@layout/fragment_image_process_top"/>
+        android:id="@+id/fragment_transaction_result_image"
+        android:name="com.example.dianzi.fragment.TransactionResultImageFragment"
+        android:label=""
+        tools:layout="@layout/fragment_transaction_result_image"/>
+    <fragment
+        android:id="@+id/fragment_transaction_new_image"
+        android:name="com.example.dianzi.fragment.TransactionNewImageFragment"
+        android:label=""
+        tools:layout="@layout/fragment_transaction_new_image" />
 </navigation>

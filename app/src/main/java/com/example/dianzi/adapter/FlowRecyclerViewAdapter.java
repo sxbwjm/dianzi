@@ -1,4 +1,4 @@
-package com.example.dianzi;
+package com.example.dianzi.adapter;
 
 import android.graphics.Color;
 import android.os.Bundle;

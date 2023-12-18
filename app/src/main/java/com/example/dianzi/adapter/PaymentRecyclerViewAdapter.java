@@ -1,4 +1,4 @@
-package com.example.dianzi;
+package com.example.dianzi.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -19,8 +19,9 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.dianzi.MainApplication;
+import com.example.dianzi.R;
 import com.example.dianzi.common.CommonFunc;
-import com.example.dianzi.common.Config;
 import com.example.dianzi.databinding.FragmentPayableBatchItemBinding;
 import com.example.dianzi.db.DBAsyncTask;
 import com.example.dianzi.entity.BankflowPay;
@@ -28,9 +29,6 @@ import com.example.dianzi.entity.CashflowPayable;
 import com.example.dianzi.entity.PayableBatch;
 import com.example.dianzi.entity.PayableBatchWithBreakdown;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**

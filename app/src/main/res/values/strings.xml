@@ -54,6 +54,7 @@
 
     <string name="match">对账</string>
     <string name="open_photo">图片</string>
+    <string name="divide_photo">分割</string>
     <string name="process_photo">处理图片</string>
 
     <string name="add_result">结果</string>

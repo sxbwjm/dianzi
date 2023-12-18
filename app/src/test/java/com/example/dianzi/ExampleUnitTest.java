@@ -49,4 +49,17 @@ public class ExampleUnitTest {
             System.out.println(path);
         }
     }
+
+    @Test
+    public void ocr() {
+        System.out.println("ocr init start");
+        try {
+
+            TessBaseAPI tessBaseAPI = new TessBaseAPI();
+            tessBaseAPI.init("/data/data/com.example.dianzi/files", "chi_sim");
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("ocr init done");
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.dianzi;
+package com.example.dianzi.adapter;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,17 +7,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.dianzi.R;
 import com.example.dianzi.common.CommonFunc;
-import com.example.dianzi.databinding.FragmentBankStatementItemBinding;
 import com.example.dianzi.databinding.FragmentBankflowPrincipleItemBinding;
-import com.example.dianzi.databinding.FragmentBankflowPrincipleNewBinding;
 import com.example.dianzi.entity.BankflowPrinciple;
-import com.example.dianzi.entity.BankflowReceive;
-import com.example.dianzi.entity.TransactionData;
 
 import java.util.List;
 

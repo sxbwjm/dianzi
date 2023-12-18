@@ -1,27 +1,32 @@
 package com.example.dianzi.db;
 
-import androidx.room.AutoMigration;
+import android.os.Handler;
+
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 
 import com.example.dianzi.entity.Account;
-import com.example.dianzi.entity.BankflowPayDao;
+import com.example.dianzi.dao.BankflowPayDao;
 import com.example.dianzi.entity.BankflowPrinciple;
-import com.example.dianzi.entity.BankflowPrincipleDao;
+import com.example.dianzi.dao.BankflowPrincipleDao;
 import com.example.dianzi.entity.BankflowReceive;
-import com.example.dianzi.entity.BankflowReceiveDao;
+import com.example.dianzi.dao.BankflowReceiveDao;
 import com.example.dianzi.entity.BankflowPay;
 import com.example.dianzi.entity.CashflowPayable;
-import com.example.dianzi.entity.CashflowPayableDao;
+import com.example.dianzi.dao.CashflowPayableDao;
 import com.example.dianzi.entity.CashflowReceivable;
-import com.example.dianzi.entity.CashflowReceivableDao;
+import com.example.dianzi.dao.CashflowReceivableDao;
 import com.example.dianzi.entity.PayableBatch;
-import com.example.dianzi.entity.PayableBatchDao;
-import com.example.dianzi.entity.PayableBatchWithBreakdownDao;
+import com.example.dianzi.dao.PayableBatchDao;
+import com.example.dianzi.dao.PayableBatchWithBreakdownDao;
 import com.example.dianzi.entity.Sender;
-import com.example.dianzi.entity.StatisticsDao;
+import com.example.dianzi.dao.StatisticsDao;
 import com.example.dianzi.entity.TransactionData;
-import com.example.dianzi.entity.TransactionDao;
+import com.example.dianzi.dao.TransactionDao;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Database(entities =
         {TransactionData.class, CashflowPayable.class, CashflowReceivable.class,
@@ -46,6 +51,17 @@ import com.example.dianzi.entity.TransactionDao;
     public abstract StatisticsDao statisticsDao();
 
     public abstract BankflowPrincipleDao bankflowPrincipleDao();
+
+    public void deleteAllMigrationHelper() {
+        transactionDao().deleteAll();
+        bankflowPayDao().deleteAll();
+        bankflowReceiveDao().deleteAll();
+        cashflowReceivableDao().deleteAll();
+        cashflowPayableDao().deleteAll();
+        payableBatchDao().deleteAll();
+        bankflowPrincipleDao().deleteAll();
+
+    }
 
     public void insertPrepaymentHelper(BankflowPay prepayment) {
         PayableBatch payableBatch = payableBatchDao().getCurrentPayable(prepayment.name);
@@ -95,5 +111,15 @@ import com.example.dianzi.entity.TransactionDao;
         bankflowPayDao().insert(settlePayment);
         payableBatchDao().update(payableBatch);
     }
+
+    public void insertBankflowReceiveHelper(BankflowReceive bankflowReceive, List<CashflowReceivable> matchList) {
+
+        long bankflowId = bankflowReceiveDao().insert(bankflowReceive);
+        for(CashflowReceivable c : matchList) {
+            c.bankflowId = bankflowId;
+            cashflowReceivableDao().update(c);
+        }
+    }
+
 
 }

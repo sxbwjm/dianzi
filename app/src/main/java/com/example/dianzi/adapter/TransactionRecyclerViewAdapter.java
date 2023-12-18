@@ -1,4 +1,4 @@
-package com.example.dianzi;
+package com.example.dianzi.adapter;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.dianzi.R;
 import com.example.dianzi.common.CommonFunc;
 import com.example.dianzi.entity.TransactionData;
 import com.example.dianzi.databinding.FragmentTransactionItemBinding;

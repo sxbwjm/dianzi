@@ -183,6 +183,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/transaction_photo" />
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_ocr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/baseline_text_format_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/transaction_photo" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_rotate_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

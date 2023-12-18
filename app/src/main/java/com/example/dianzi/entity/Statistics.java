@@ -1,6 +1,7 @@
 package com.example.dianzi.entity;
 
 import com.example.dianzi.common.CommonFunc;
+import com.example.dianzi.dao.MonthlyProfit;
 
 import java.util.Date;
 import java.util.List;
@@ -18,8 +19,9 @@ public class Statistics {
     public float totalUnreceivedCashflow;
     public float totalPrinciple;
 
-    public List<String> transactionMonthList;
-    public List<Float> monthlyProfit;
+    //public List<String> transactionMonthList;
+    public List<MonthlyProfit> monthlyProfitList;
+    public List<DailyCash> dailyAvailableCashList;
 
     public long getTotalDays() {
         Date sysDate = new Date();

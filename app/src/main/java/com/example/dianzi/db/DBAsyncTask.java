@@ -3,7 +3,6 @@ package com.example.dianzi.db;
 
 import android.os.Handler;
 
-import com.example.dianzi.common.CommonFunc;
 import com.example.dianzi.entity.BankflowPrinciple;
 import com.example.dianzi.entity.BankflowReceive;
 import com.example.dianzi.entity.CashflowPayable;
@@ -11,7 +10,7 @@ import com.example.dianzi.entity.CashflowReceivable;
 import com.example.dianzi.entity.PayableBatch;
 import com.example.dianzi.entity.BankflowPay;
 import com.example.dianzi.entity.Statistics;
-import com.example.dianzi.entity.StatisticsDao;
+import com.example.dianzi.dao.StatisticsDao;
 import com.example.dianzi.entity.TransactionData;
 
 import java.util.List;
@@ -41,8 +40,9 @@ public class DBAsyncTask {
                 statistics.startDate = statisticsDao.getStartDate();
                 statistics.totalUnreceivedCashflow = statisticsDao.getTotalUnreceivedCashflow();
                 statistics.totalPrinciple = statisticsDao.getTotalPrinciple();
-                statistics.transactionMonthList = statisticsDao.getTransactionMonthList();
-                statistics.monthlyProfit = statisticsDao.getTransactionMonthProfit();
+              //  statistics.transactionMonthList = statisticsDao.getTransactionMonthList();
+                statistics.monthlyProfitList = statisticsDao.getTransactionMonthProfit();
+                statistics.dailyAvailableCashList = statisticsDao.getDailyAvailableCash();
 
                 DataSet.getInstance().statistics = statistics;
                 handler.sendMessage(handler.obtainMessage(1, "OK"));
@@ -152,13 +152,7 @@ public class DBAsyncTask {
         });
     }
 
-    public void deleteAllMigrationHelper() {
-        db.transactionDao().deleteAll();
-        db.bankflowPayDao().deleteAll();
-        db.cashflowReceivableDao().deleteAll();
-        db.cashflowPayableDao().deleteAll();
-        db.payableBatchDao().deleteAll();
-    }
+
 
 
     public void getAllTransactions(Handler handler){
@@ -294,12 +288,7 @@ public class DBAsyncTask {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-
-                long bankflowId = db.bankflowReceiveDao().insert(bankflowReceive);
-                for(CashflowReceivable c : matchList) {
-                    c.bankflowId = bankflowId;
-                    db.cashflowReceivableDao().update(c);
-                }
+               db.insertBankflowReceiveHelper(bankflowReceive, matchList);
             }
         });
     }

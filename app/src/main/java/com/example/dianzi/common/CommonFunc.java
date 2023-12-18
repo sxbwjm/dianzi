@@ -1,7 +1,15 @@
 package com.example.dianzi.common;
 
-import com.example.dianzi.common.Config;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 
+import com.example.dianzi.MainApplication;
+import com.example.dianzi.common.Config;
+import com.github.chrisbanes.photoview.PhotoView;
+
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -44,5 +52,17 @@ public class CommonFunc {
     public static String getAmountTextInt(float amount) {
         String text = currencyFormatter.format(amount);
         return text.substring(0, text.length() - 3);
+    }
+
+    public static Bitmap getBitmap(Uri uri) {
+        try {
+            InputStream stream = MainApplication.instance.getContentResolver().openInputStream(uri);
+            Bitmap bmp = BitmapFactory.decodeStream(new BufferedInputStream(stream));
+            stream.close();
+            return bmp;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dianzi.FlowRecyclerViewAdapter;
+import com.example.dianzi.adapter.FlowRecyclerViewAdapter;
 import com.example.dianzi.MainApplication;
 import com.example.dianzi.R;
 import com.example.dianzi.activity.MainActivity;

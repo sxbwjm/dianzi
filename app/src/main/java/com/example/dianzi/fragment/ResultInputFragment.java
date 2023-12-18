@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,8 +17,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.os.PatternMatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +32,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.dianzi.adapter.TransactionRecyclerViewAdapter;
 import com.example.dianzi.common.Config;
 import com.example.dianzi.MainApplication;
 import com.example.dianzi.common.PhotoViewCommon;
@@ -33,10 +41,21 @@ import com.example.dianzi.databinding.FragmentResultInputBinding;
 import com.example.dianzi.db.DBAsyncTask;
 import com.example.dianzi.entity.TransactionData;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.chinese.ChineseTextRecognizerOptions;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,6 +87,16 @@ public class ResultInputFragment extends Fragment {
                             Uri uri = resultData.getData();
                             PhotoView photoView = binding.getRoot().findViewById(R.id.result_photo);
                             PhotoViewCommon.showImage(photoView, uri);
+                            Bitmap bitmap = ((BitmapDrawable)photoView.getDrawable()).getBitmap();
+                            ExecutorService executor = Executors.newSingleThreadExecutor();
+                            executor.submit(new Runnable() {
+                                 @Override
+                                 public void run() {
+                                     ocr(bitmap);
+                                 }
+                             }
+                            );
+
 
 
                         }
@@ -78,6 +107,116 @@ public class ResultInputFragment extends Fragment {
 
     public ResultInputFragment() {
         // Required empty public constructor
+    }
+
+    private void ocr(Bitmap bitmap) {
+        TextRecognizer recognizer =
+                TextRecognition.getClient(new ChineseTextRecognizerOptions.Builder().build());
+        InputImage inputImage = InputImage.fromBitmap(bitmap, 0);
+        recognizer.process(inputImage).addOnSuccessListener(new OnSuccessListener<Text>() {
+            @Override
+            public void onSuccess(Text text) {
+                String result = text.getText();
+              //  System.out.println(result);
+                Matcher m = null;
+
+                String transactionDate = "";
+                m  = Pattern.compile("([0-9]{4})年([0-9]{2})月([0-9]{2})日").matcher(result);
+                if(m.find()) {
+                    transactionDate = m.group(1) + m.group(2) + m.group(3);
+                }
+                System.out.println(transactionDate);
+
+                String plate = "";
+                m  = Pattern.compile("[0-9]{4}").matcher(result);
+                if(m.find()) {
+                    plate = m.group();
+                }
+                System.out.println("plate:" + plate);
+
+                float weight = 0;
+                m = Pattern.compile("[0-9]{2}[.][0-9]{6}").matcher(result);
+                if(m.find()) {
+                    weight = Float.parseFloat(m.group());
+                }
+                System.out.println("weight:" + weight);
+
+                float totalSales = 0;
+                m = Pattern.compile("[1-9]?[0-9]([,.])[0-9]{3}[.][0-9]").matcher(result);
+                if(m.find()) {
+                    String temp = m.group();
+                    if(m.group(1).equals(".")) {
+                        temp = temp.replaceFirst("[.]", "");
+                    }
+                    totalSales = Float.parseFloat(temp.replace(",", ""));
+                }
+                System.out.println("totalSales:" + totalSales);
+
+                float price = 0;
+                for(Text.TextBlock block : text.getTextBlocks()) {
+                    m = Pattern.compile("^[0-9]{3}[.][0-9]").matcher(block.getText());
+                    if (m.find()) {
+                        price = Float.parseFloat(m.group().replace(",", ""));
+                        break;
+                    }
+                }
+                System.out.println("price:" + price);
+
+            }
+
+        });
+    }
+
+    Handler ocrHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.obj != null) {
+                Text ocrText = (Text)msg.obj;
+
+            }
+        }
+    };
+
+
+    private void testOCR(Text text) {
+            String resultText = text.getText();
+            System.out.println("full text:" + resultText);
+            for(Text.TextBlock block : text.getTextBlocks()) {
+                String blockText = block.getText();
+
+                Point[] blockCornerPoints = block.getCornerPoints();
+
+                Rect blockFrame = block.getBoundingBox();
+                System.out.print("\tblock points:");
+                for(Point p : blockCornerPoints) {
+                    System.out.println(p);
+                }
+                System.out.println();
+                System.out.println("\tblock frame:" + blockFrame);
+                System.out.println("\tblock text:" + blockText);
+                for(Text.Line line : block.getLines()) {
+                    String lineText = line.getText();
+                    System.out.println("\t\tline text:" + lineText);
+                    Point[] lineCornerPoints = line.getCornerPoints();
+                    Rect lineFrame = line.getBoundingBox();
+                    for(Text.Element element : line.getElements()) {
+                        String elementText = element.getText();
+                        System.out.println("\t\t\telement text:" + elementText);
+                        Point[] elementCornerPoints = element.getCornerPoints();
+                        Rect elementFrame = element.getBoundingBox();
+                        for(Text.Symbol symbol : element.getSymbols()) {
+                            String symbolText = symbol.getText();
+                            System.out.println("\t\t\t\tsymbol text:" + symbolText);
+                            Point[] symbolCornerPoints = symbol.getCornerPoints();
+                            Rect symbolFrame = symbol.getBoundingBox();
+                        }
+
+                    }
+                }
+
+
+            }
+
     }
 
 

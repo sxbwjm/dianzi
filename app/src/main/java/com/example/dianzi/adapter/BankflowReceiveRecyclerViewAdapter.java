@@ -1,4 +1,4 @@
-package com.example.dianzi;
+package com.example.dianzi.adapter;
 
 import androidx.recyclerview.widget.RecyclerView;
 

@@ -1,6 +1,8 @@
-package com.example.dianzi.entity;
+package com.example.dianzi.dao;
 
 import androidx.room.Query;
+
+import com.example.dianzi.entity.Sender;
 
 import java.util.List;
 

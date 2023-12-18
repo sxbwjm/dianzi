@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 
 import com.example.dianzi.MainApplication;
 import com.example.dianzi.R;
-import com.example.dianzi.TransactionRecyclerViewAdapter;
+import com.example.dianzi.adapter.TransactionRecyclerViewAdapter;
 import com.example.dianzi.activity.MainActivity;
 import com.example.dianzi.db.DBAsyncTask;
 import com.example.dianzi.entity.TransactionData;

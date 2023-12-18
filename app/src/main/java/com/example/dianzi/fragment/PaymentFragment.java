@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dianzi.MainApplication;
-import com.example.dianzi.PaymentRecyclerViewAdapter;
+import com.example.dianzi.adapter.PaymentRecyclerViewAdapter;
 import com.example.dianzi.R;
 import com.example.dianzi.activity.MainActivity;
 import com.example.dianzi.db.DBAsyncTask;

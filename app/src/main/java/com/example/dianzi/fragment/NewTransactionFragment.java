@@ -6,6 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -20,13 +24,20 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.dianzi.activity.ImageProcessActivity;
+import com.example.dianzi.common.CommonFunc;
 import com.example.dianzi.common.Config;
 import com.example.dianzi.MainApplication;
+import com.example.dianzi.common.OCR;
 import com.example.dianzi.common.PhotoViewCommon;
 import com.example.dianzi.R;
 import com.example.dianzi.activity.MainActivity;
+import com.example.dianzi.common.TransactionImageNew;
+import com.example.dianzi.common.TransactionImageResult;
 import com.example.dianzi.databinding.FragmentNewTransactionBinding;
 import com.example.dianzi.db.DBAsyncTask;
 import com.example.dianzi.entity.TransactionData;
@@ -39,7 +50,7 @@ import java.util.Date;
 public class NewTransactionFragment extends Fragment {
 
     private FragmentNewTransactionBinding binding;
-
+    private TransactionImageNew transactionImageNew;
     ActivityResultLauncher imageLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -91,10 +102,12 @@ public class NewTransactionFragment extends Fragment {
 
         binding = FragmentNewTransactionBinding.inflate(inflater, container, false);
 
+
         binding.buttonSaveInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveTransaction(view);
+                ((MainActivity)getActivity()).resetTransactionImage();
                 NavHostFragment.findNavController(NewTransactionFragment.this).navigate(R.id.action_newFragment_to_nav_list);
             }
         });
@@ -102,6 +115,7 @@ public class NewTransactionFragment extends Fragment {
         binding.buttonCancelInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ((MainActivity)getActivity()).resetTransactionImage();
                 NavHostFragment.findNavController(NewTransactionFragment.this).navigate(R.id.action_newFragment_to_nav_list);
             }
         });
@@ -129,11 +143,39 @@ public class NewTransactionFragment extends Fragment {
                 binding.transactionPhoto.setRotationBy(90);
             }
         });
-        View view = binding.getRoot();
 
-        init(view);
+        binding.buttonOcr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        return view;
+                PhotoView photoView = binding.transactionPhoto;
+                Bitmap newBitmap = Bitmap.createBitmap(photoView.getWidth(), photoView.getHeight(), Bitmap.Config.RGB_565);
+                Canvas c = new Canvas(newBitmap);
+                photoView.draw(c);
+
+                OCR ocr = new OCR(newBitmap);
+                Handler handler = new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        if (msg.obj != null) {
+                             transactionImageNew  = (TransactionImageNew) ocr.getImage();
+                             init(transactionImageNew);
+                        }
+
+                    }
+              };
+
+                ocr.recognize(handler);
+            }
+        });
+
+        transactionImageNew = (TransactionImageNew)((MainActivity)getActivity()).getTransactionImage();
+
+       // View view = binding.getRoot();
+
+        init(transactionImageNew);
+
+        return binding.getRoot();
 
     }
 
@@ -149,20 +191,29 @@ public class NewTransactionFragment extends Fragment {
         binding = null;
     }
 
-    protected void init(View view) {
+    protected void init(TransactionImageNew transactionImageNew) {
 
         ArrayAdapter adapter = new ArrayAdapter(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, Config.SENDER_NAMES);
-        Spinner spinner = (Spinner) view.findViewById(R.id.input_sender_name);
-        spinner.setAdapter(adapter);
+        binding.inputSenderName.setAdapter(adapter);
 
-        EditText text = view.findViewById(R.id.input_date);
         DateFormat df = new SimpleDateFormat(Config.DATE_FORMAT);
         Date date = new Date();
-        text.setText(df.format(new Date()));
+        binding.inputDate.setText(CommonFunc.getSystemDateString());
 
         adapter = new ArrayAdapter(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, Config.ACCOUNT_NAMES);
-        spinner = (Spinner) view.findViewById(R.id.input_account_name);
-        spinner.setAdapter(adapter);
+        binding.inputAccountName.setAdapter(adapter);
+
+        if(transactionImageNew != null) {
+            binding.transactionPhoto.setImageBitmap(transactionImageNew.getBitmap());
+            TransactionData transactionData = transactionImageNew.getTransactionData();
+            binding.inputDate.setText(transactionData.inputDate);
+            binding.inputRecordNo.setText(transactionData.sequence);
+            binding.inputPlate.setText(transactionData.plateNumber);
+            if(!transactionData.accountName.isEmpty()) {
+                binding.inputAccountName.setSelection(adapter.getPosition(transactionData.accountName));
+            }
+            binding.inputWeight.setText(transactionData.weight + "");
+        }
     }
 
 }

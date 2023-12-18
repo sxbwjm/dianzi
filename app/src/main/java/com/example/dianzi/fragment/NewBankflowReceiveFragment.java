@@ -1,7 +1,6 @@
 package com.example.dianzi.fragment;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.service.autofill.Dataset;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +23,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.dianzi.common.CommonFunc;
 import com.example.dianzi.common.Config;
-import com.example.dianzi.FlowRecyclerViewAdapter;
+import com.example.dianzi.adapter.FlowRecyclerViewAdapter;
 import com.example.dianzi.MainApplication;
 import com.example.dianzi.R;
 import com.example.dianzi.activity.MainActivity;
@@ -61,7 +62,8 @@ public class NewBankflowReceiveFragment extends Fragment {
     RecyclerView recyclerView;
 
 
-    private  ArrayList<CashflowReceivable> candidateMatchList  = new ArrayList<CashflowReceivable>();
+    private  List<CashflowReceivable> candidateMatchList  = null;
+    private BankflowReceive curBankflowReceive = null;
     List<CashflowReceivable> matchResult = null;
 
     public NewBankflowReceiveFragment() {
@@ -118,22 +120,12 @@ public class NewBankflowReceiveFragment extends Fragment {
         rootView.findViewById(R.id.button_match).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                float target = Float.parseFloat(((TextView)rootView.findViewById(R.id.amount)).getText().toString());
-
-                matchResult = match(target);
+              //  float target = Float.parseFloat(((TextView)rootView.findViewById(R.id.amount)).getText().toString());
+                BankflowReceive bankflowReceive = new BankflowReceive();
+                bankflowReceive.amount = Float.parseFloat(((TextView)rootView.findViewById(R.id.amount)).getText().toString());
+                matchResult = bankflowReceive.match(candidateMatchList);
                 if(matchResult != null && matchResult.size() > 0) {
-//                    for(int i = 0; i < candidateMatchList.size(); i++) {
-//                        CashflowReceivable c = candidateMatchList.get(i);
-//                        if(matchResult.contains(c)) {
-//                            recyclerView.getChildAt(i).setBackgroundColor(Color.GRAY);
-//                        } else {
-//                            recyclerView.getChildAt(i).setBackgroundColor(Color.WHITE);
-//                        }
-//                    }
-
-
                     recyclerView.getAdapter().notifyDataSetChanged();
-                   // recyclerView.setAdapter(new FlowRecyclerViewAdapter(matchResult));
                 }
 
             }
@@ -143,59 +135,25 @@ public class NewBankflowReceiveFragment extends Fragment {
     }
 
 
-    protected List<CashflowReceivable> match(float target) {
 
-
-        if(candidateMatchList.size() == 0) {
-            return null;
-        }
-
-        // reset bankflowId
-        for(CashflowReceivable c : candidateMatchList) {
-            c.bankflowId = 0;
-        }
-
-        int[] numbers = new int[candidateMatchList.size()];
-        int sum = (int)(target * 10);
-        for(int i = 0; i < candidateMatchList.size(); i++) {
-            numbers[i] = (int)(candidateMatchList.get(i).amount * 10);
-            System.out.print(numbers[i] + ",");
-        }
-        System.out.println();
-        System.out.println("numbers:" + numbers);
-        System.out.println("sum:" + sum);
-        SubsetSum subsetSum = new SubsetSum();
-       ArrayList<ArrayList<Integer>> result = subsetSum.findAllSubsets(numbers, sum);
-
-       if(result.size() > 0) {
-           List<CashflowReceivable> resultList = new ArrayList<CashflowReceivable>();
-           ArrayList<Integer> firstMatchPath = result.get(0);
-           System.out.println("firstMatchPath:" + firstMatchPath);
-           for(CashflowReceivable c : candidateMatchList) {
-               if(firstMatchPath.contains((int) (c.amount * 10))) {
-                   resultList.add(c);
-                   c.bankflowId = -1;
-               }
-           }
-           return resultList;
-       }
-
-       return null;
-    }
 
     protected void init(View view) {
+
+        curBankflowReceive = new BankflowReceive();
+
         EditText text = view.findViewById(R.id.date);
-        DateFormat df = new SimpleDateFormat("yyyyMMdd");
-        Date date = new Date();
-        text.setText(df.format(new Date()));
+        text.setText(CommonFunc.getSystemDateString());
+        curBankflowReceive.flowDate = text.getText().toString();
 
         ArrayAdapter adapter = new ArrayAdapter(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, Config.ACCOUNT_NAMES);
         Spinner spinner = (Spinner) view.findViewById(R.id.account_name);
         spinner.setAdapter(adapter);
+        curBankflowReceive.name = spinner.getSelectedItem().toString();
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                filterCashflowReceivableList(spinner.getSelectedItem().toString());
+                curBankflowReceive.name = spinner.getSelectedItem().toString();
+                filterCashflowReceivableList();
             }
 
             @Override
@@ -204,22 +162,18 @@ public class NewBankflowReceiveFragment extends Fragment {
             }
         });
 
-        loadCashflowReceivables(spinner.getSelectedItem().toString());
+        loadAllUnreceivedCashflowReceivables();
+
 
     }
 
-    private void filterCashflowReceivableList(String name) {
-        candidateMatchList.clear();
-        String bankflowDate = ((TextView)rootView.findViewById(R.id.date)).getText().toString();
-        for(CashflowReceivable c : DataSet.getInstance().unReceivedCashflowReceivalbeList) {
-            if(c.name.equals(name) && c.flowDate.compareTo(bankflowDate) < 0) {
-                candidateMatchList.add(c);
-            }
-        }
+    private void filterCashflowReceivableList() {
+        candidateMatchList = curBankflowReceive.getCandidateCashflowReceivableList(DataSet.getInstance().unReceivedCashflowReceivalbeList);
         recyclerView.setAdapter(new FlowRecyclerViewAdapter(candidateMatchList));
+
     }
 
-    protected void loadCashflowReceivables(String name) {
+    protected void loadAllUnreceivedCashflowReceivables() {
         recyclerView = rootView.findViewById(R.id.flow_list);
         Context context = recyclerView.getContext();
         //RecyclerView recyclerView = (RecyclerView) view;
@@ -235,7 +189,7 @@ public class NewBankflowReceiveFragment extends Fragment {
             public void handleMessage(Message msg) {
                 if(msg.obj != null) {
                     // List<Payment> payments = (List<Payment>)msg.obj;
-                    filterCashflowReceivableList(name);
+                    filterCashflowReceivableList();
                 }
             }
         };
@@ -247,14 +201,12 @@ public class NewBankflowReceiveFragment extends Fragment {
     }
 
     protected void saveBankflowReceive(View view) {
-        BankflowReceive bankflowReceive = new BankflowReceive();
-
-        bankflowReceive.flowDate = ((TextView)rootView.findViewById(R.id.date)).getText().toString();
-        bankflowReceive.name = ((Spinner)rootView.findViewById(R.id.account_name)).getSelectedItem().toString();
-        bankflowReceive.amount = Float.parseFloat(((TextView)rootView.findViewById(R.id.amount)).getText().toString());
+        curBankflowReceive.flowDate = ((TextView)rootView.findViewById(R.id.date)).getText().toString();
+        curBankflowReceive.name = ((Spinner)rootView.findViewById(R.id.account_name)).getSelectedItem().toString();
+        curBankflowReceive.amount = Float.parseFloat(((TextView)rootView.findViewById(R.id.amount)).getText().toString());
 
         MainActivity activity = (MainActivity)getActivity();
         DBAsyncTask dbAsyncTask = new DBAsyncTask(MainApplication.instance.getDB());
-        dbAsyncTask.insertBankflowReceive(bankflowReceive, matchResult);
+        dbAsyncTask.insertBankflowReceive(curBankflowReceive, matchResult);
     }
 }

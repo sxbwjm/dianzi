@@ -17,11 +17,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dianzi.BankflowPrincipleRecyclerViewAdapter;
-import com.example.dianzi.FlowRecyclerViewAdapter;
+import com.example.dianzi.adapter.BankflowPrincipleRecyclerViewAdapter;
 import com.example.dianzi.MainApplication;
 import com.example.dianzi.R;
-import com.example.dianzi.activity.MainActivity;
 import com.example.dianzi.databinding.FragmentBankflowPrincipleTopBinding;
 import com.example.dianzi.db.DBAsyncTask;
 import com.example.dianzi.db.DataSet;

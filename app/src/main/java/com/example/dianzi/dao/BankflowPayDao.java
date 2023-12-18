@@ -1,8 +1,10 @@
-package com.example.dianzi.entity;
+package com.example.dianzi.dao;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import com.example.dianzi.entity.BankflowPay;
 
 import java.util.List;
 @Dao

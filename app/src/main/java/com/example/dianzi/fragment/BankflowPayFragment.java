@@ -17,7 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.dianzi.FlowRecyclerViewAdapter;
+import com.example.dianzi.adapter.FlowRecyclerViewAdapter;
 import com.example.dianzi.MainApplication;
 import com.example.dianzi.R;
 import com.example.dianzi.activity.MainActivity;

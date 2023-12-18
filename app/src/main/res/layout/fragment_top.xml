@@ -171,4 +171,11 @@
         android:layout_marginTop="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart_daily_available_cash"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chart_monthly_profit" />
 </androidx.constraintlayout.widget.ConstraintLayout>
